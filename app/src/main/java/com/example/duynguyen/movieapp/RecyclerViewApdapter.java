@@ -1,7 +1,6 @@
 package com.example.duynguyen.movieapp;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.example.duynguyen.movieapp.Model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -39,10 +39,7 @@ public class RecyclerViewApdapter extends RecyclerView.Adapter<RecyclerViewApdap
         public void setData (Movie item) {
             this.item = item;
 
-            Picasso.with(mContext).load(Uri.parse(item.posterPath)).into(imageView);
-            //Picasso.with(mContext).setLoggingEnabled(true);
-            //imageView.setImageURI(Uri.parse(item.posterPath));
-            //imageView.setImageResource(R.drawable.beer);
+            Picasso.get().load("http://image.tmdb.org/t/p/w185"+item.getPoster_path()).into(imageView);
         }
     }
 
