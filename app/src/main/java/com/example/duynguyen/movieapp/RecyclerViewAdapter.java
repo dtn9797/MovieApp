@@ -13,15 +13,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class RecyclerViewApdapter extends RecyclerView.Adapter<RecyclerViewApdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    ArrayList<Movie> mItems;
-    Context mContext;
+    ArrayList<Movie> mItems=new ArrayList<Movie>();
+    Context context;
 
-    RecyclerViewApdapter (ArrayList<Movie> items, Context context){
-        mItems = items;
-        mContext = context;
+    RecyclerViewAdapter (){
     }
+
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -43,14 +42,20 @@ public class RecyclerViewApdapter extends RecyclerView.Adapter<RecyclerViewApdap
         }
     }
 
+    public void setMoviesData (ArrayList<Movie> movies){
+        mItems= movies;
+        notifyDataSetChanged();
+    }
+
     @Override
-    public RecyclerViewApdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.content_main, parent, false);
+    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        //Context context = parent.getContext();
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_main, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewApdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerViewAdapter.ViewHolder holder, int position) {
         holder.setData(mItems.get(position));
     }
 
