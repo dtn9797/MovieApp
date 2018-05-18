@@ -22,62 +22,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    ArrayList<Movie> arrayList;
-    String API_BASE_URL = "http://api.themoviedb.org";
+    RecyclerViewAdapter mRecyclerViewAdapter;
+
+    final String POPULAR_TYPE ="popular";
+    final String TOP_RATED_TYPE ="top rated";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        arrayList = new ArrayList<Movie>();
+        mRecyclerViewAdapter = new RecyclerViewAdapter();
+        recyclerView.setAdapter(mRecyclerViewAdapter);
+        AutoFitGridLayoutManager autoFitGridLayoutManager = new AutoFitGridLayoutManager(MainActivity.this,500);
+        recyclerView.setLayoutManager(autoFitGridLayoutManager);
 
-        //RETROFIT
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-        Retrofit.Builder builder = new Retrofit.Builder()
-                                        .baseUrl(API_BASE_URL)
-                                        .addConverterFactory(GsonConverterFactory.create());
-
-        Retrofit retrofit =
-                builder
-                        .client(
-                                httpClient.build()
-                        )
-                        .build();
-        MovieClient client =  retrofit.create(MovieClient.class);
-
-        Call<APIResponse> call = client.top_rated("84d34117b17f3abebe9d04a0325e21c6");
-        call.enqueue(new Callback<APIResponse>() {
-            @Override
-            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                arrayList = response.body().getResults();
-
-                RecyclerViewApdapter recyclerViewApdapter = new RecyclerViewApdapter(arrayList,MainActivity.this);
-                recyclerView.setAdapter(recyclerViewApdapter);
-
-                AutoFitGridLayoutManager autoFitGridLayoutManager = new AutoFitGridLayoutManager(MainActivity.this,500);
-
-                recyclerView.setLayoutManager(autoFitGridLayoutManager);
-
-            }
-
-            @Override
-            public void onFailure(Call<APIResponse> call, Throwable t) {
-                Log.e("Error","Error in retrofit");
-            }
-        });
-
-
-
-
+        loadMovieData("normal");
     }
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -94,10 +56,38 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.popular_settings) {
+            loadMovieData(POPULAR_TYPE);
+            return true;
+        }
+        else if (id == R.id.top_rated_settings) {
+            loadMovieData(TOP_RATED_TYPE);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void loadMovieData (String type){
+        MovieClient client =  new RetrofitClient().getClient().create(MovieClient.class);
+        Call<APIResponse> call;
+        if (type == TOP_RATED_TYPE) {
+           call = client.top_rated("84d34117b17f3abebe9d04a0325e21c6");
+        }
+        else {
+            call = client.popular_movies("84d34117b17f3abebe9d04a0325e21c6");
+        }
+        call.enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                ArrayList<Movie> movies = response.body().getResults();
+                mRecyclerViewAdapter.setMoviesData(movies);
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+                Log.e("Error","Error in retrofit");
+            }
+        });
     }
 }
