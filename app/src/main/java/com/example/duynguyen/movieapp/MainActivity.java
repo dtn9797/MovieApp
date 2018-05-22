@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
     final String POPULAR_TYPE ="popular";
     final String TOP_RATED_TYPE ="top rated";
+    final String API_KEY = "84d34117b17f3abebe9d04a0325e21c6";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +78,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         MovieClient client =  new RetrofitClient().getClient().create(MovieClient.class);
         Call<APIResponse> call;
         if (type == TOP_RATED_TYPE) {
-           call = client.top_rated("84d34117b17f3abebe9d04a0325e21c6");
+           call = client.top_rated(API_KEY);
         }
         else {
-            call = client.popular_movies("84d34117b17f3abebe9d04a0325e21c6");
+            call = client.popular_movies(API_KEY);
         }
         call.enqueue(new Callback<APIResponse>() {
             @Override
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
     @Override
     public void onItemClick(Movie item) {
-        Toast.makeText(getApplicationContext(), item.getVoteAverage() + " is clicked", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), item.getVoteAverage() + " is clicked", Toast.LENGTH_SHORT).show();
         launchDetailActivity(item);
     }
     private void launchDetailActivity (Movie item){
