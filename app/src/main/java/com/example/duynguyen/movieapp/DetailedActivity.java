@@ -74,7 +74,7 @@ public class DetailedActivity extends AppCompatActivity  {
         movieTitleTv.setText(title);
         overviewTv.setText(overView);
         releaseDateTv.setText(releaseDate);
-        voteAverageTv.setText(voteAverage);
+        voteAverageTv.setText(voteAverage+"/10");
     }
     private void closeOnError () {
         finish();

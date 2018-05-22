@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MovieApp</string>
+    <string name="intent_name">MovieDetails</string>
     <string name="action_settings">Settings</string>
 </resources>
