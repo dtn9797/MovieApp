@@ -1,4 +1,4 @@
-package com.example.duynguyen.movieapp;
+package com.example.duynguyen.movieapp.Utils;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;

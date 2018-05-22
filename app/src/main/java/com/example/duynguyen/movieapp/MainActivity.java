@@ -1,25 +1,29 @@
 package com.example.duynguyen.movieapp;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.duynguyen.movieapp.Model.APIResponse;
 import com.example.duynguyen.movieapp.Model.Movie;
+import com.example.duynguyen.movieapp.Utils.AutoFitGridLayoutManager;
+import com.example.duynguyen.movieapp.Utils.MovieClient;
+import com.example.duynguyen.movieapp.Utils.RetrofitClient;
 
 import java.util.ArrayList;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemListener {
 
     RecyclerView recyclerView;
     RecyclerViewAdapter mRecyclerViewAdapter;
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerViewAdapter = new RecyclerViewAdapter();
+        mRecyclerViewAdapter = new RecyclerViewAdapter(this,this);
         recyclerView.setAdapter(mRecyclerViewAdapter);
         AutoFitGridLayoutManager autoFitGridLayoutManager = new AutoFitGridLayoutManager(MainActivity.this,500);
         recyclerView.setLayoutManager(autoFitGridLayoutManager);
@@ -86,8 +90,37 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<APIResponse> call, Throwable t) {
+                //Show alert dialog
                 Log.e("Error","Error in retrofit");
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                dialog.setCancelable(false);
+                dialog.setTitle("Connection Error");
+                dialog.setMessage("Movies Data can not be loaded. Check for your connection." );
+                dialog.setPositiveButton("Reload", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        loadMovieData(TOP_RATED_TYPE);
+                    }
+                });
+                final AlertDialog alert = dialog.create();
+                alert.show();
+
             }
         });
+    }
+
+    @Override
+    public void onItemClick(Movie item) {
+        Toast.makeText(getApplicationContext(), item.getVoteAverage() + " is clicked", Toast.LENGTH_SHORT).show();
+        launchDetailActivity(item);
+    }
+    private void launchDetailActivity (Movie item){
+        Intent intent = new Intent(this,DetailedActivity.class);
+        intent.putExtra(DetailedActivity.POSTER_EXTRA,item.getPoster_path());
+        intent.putExtra(DetailedActivity.TITLE_EXTRA,item.getTitle());
+        intent.putExtra(DetailedActivity.OVERVIEW_EXTRA,item.getOverview());
+        intent.putExtra(DetailedActivity.RELEASE_DATE_EXTRA,item.getReleaseDate());
+        intent.putExtra(DetailedActivity.VOTE_AVERAGE_EXTRA,item.getVoteAverage());
+        startActivity(intent);
     }
 }

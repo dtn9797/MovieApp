@@ -1,4 +1,4 @@
-package com.example.duynguyen.movieapp;
+package com.example.duynguyen.movieapp.Utils;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;

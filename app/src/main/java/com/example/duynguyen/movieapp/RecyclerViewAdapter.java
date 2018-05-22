@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -16,14 +17,16 @@ import java.util.ArrayList;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     ArrayList<Movie> mItems=new ArrayList<Movie>();
-    Context context;
+    Context mContext;
+    ItemListener mItemClickListener;
 
-    RecyclerViewAdapter (){
+    RecyclerViewAdapter (Context context, ItemListener itemClickListener){
+        mContext = context;
+        mItemClickListener = itemClickListener;
     }
 
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public RelativeLayout relativeLayout;
         public ImageView imageView;
         Movie item;
@@ -31,6 +34,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public ViewHolder(View v) {
             super(v);
+
+            v.setOnClickListener(this);
             relativeLayout = (RelativeLayout) v.findViewById(R.id.relativeLayout);
             imageView = (ImageView) v.findViewById(R.id.imageView);
         }
@@ -39,6 +44,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             this.item = item;
 
             Picasso.get().load("http://image.tmdb.org/t/p/w185"+item.getPoster_path()).into(imageView);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mItemClickListener!=null){
+                mItemClickListener.onItemClick(item);
+            }
         }
     }
 
@@ -50,7 +62,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //Context context = parent.getContext();
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_main, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.content_main, parent, false);
         return new ViewHolder(view);
     }
 
@@ -62,5 +74,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public int getItemCount() {
         return mItems.size();
+    }
+
+    public interface ItemListener {
+        void onItemClick (Movie item);
     }
 }

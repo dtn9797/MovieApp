@@ -1,4 +1,4 @@
-package com.example.duynguyen.movieapp;
+package com.example.duynguyen.movieapp.Utils;
 
 import com.example.duynguyen.movieapp.Model.APIResponse;
 import com.example.duynguyen.movieapp.Model.Movie;
