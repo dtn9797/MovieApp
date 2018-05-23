@@ -2,6 +2,7 @@ package com.example.duynguyen.movieapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
     final String POPULAR_TYPE ="popular";
     final String TOP_RATED_TYPE ="top rated";
-    final String API_KEY = "84d34117b17f3abebe9d04a0325e21c6";
+    final String API_KEY =  BuildConfig.ApiKey ;
 
 
     @Override
