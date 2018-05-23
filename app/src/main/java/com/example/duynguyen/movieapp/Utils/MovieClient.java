@@ -1,9 +1,6 @@
 package com.example.duynguyen.movieapp.Utils;
 
 import com.example.duynguyen.movieapp.Model.APIResponse;
-import com.example.duynguyen.movieapp.Model.Movie;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
